@@ -1,5 +1,5 @@
 from collections import Counter
-from torchtext.vocab import Vocab
+from torchtext.vocab import vocab
 from torch.utils.data import DataLoader
 from torchtext.data.utils import get_tokenizer
 import torch
@@ -34,7 +34,7 @@ def build_vocab(tokenizer, filepath, min_freq, specials=None):
         for string_ in tqdm(f):
             string_ = string_.strip().split('","')[-1][:-1]  # 新闻描述
             counter.update(tokenizer(clean_str(string_)))
-    return Vocab(counter)
+    return vocab(counter, min_freq=min_freq, specials=specials)
 
 
 def pad_sequence(sequences, batch_first=False, max_len=None, padding_value=0):
