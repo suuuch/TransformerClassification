@@ -34,7 +34,7 @@ def build_vocab(tokenizer, filepath, min_freq, specials=None):
         for string_ in tqdm(f):
             string_ = string_.strip().split('","')[-1][:-1]  # 新闻描述
             counter.update(tokenizer(clean_str(string_)))
-    return Vocab(counter, min_freq=min_freq, specials=specials)
+    return Vocab(counter)
 
 
 def pad_sequence(sequences, batch_first=False, max_len=None, padding_value=0):
@@ -69,7 +69,7 @@ def pad_sequence(sequences, batch_first=False, max_len=None, padding_value=0):
     return out_tensor
 
 
-class LoadSentenceClassificationDataset():
+class LoadSentenceClassificationDataset(object):
     def __init__(self, train_file_path=None,  # 训练集路径
                  tokenizer=None,
                  batch_size=20,
@@ -96,7 +96,7 @@ class LoadSentenceClassificationDataset():
         :return:
         """
 
-        raw_iter = open(filepath,encoding='utf8').readlines()
+        raw_iter = open(filepath, encoding='utf8').readlines()
         data = []
         max_len = 0
         for raw in tqdm(raw_iter, ncols=80):
@@ -143,3 +143,6 @@ if __name__ == '__main__':
     train_iter, test_iter = data_loader.load_train_val_test_data(path, path)
     for sample, label in train_iter:
         print(sample.shape)  # [seq_len,batch_size]
+        print(sample)
+        print(label)
+        break
