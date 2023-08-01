@@ -2,7 +2,7 @@ import os
 import torch
 
 
-class Config():
+class Config(object):
     """
     基于Transformer架构的类Translation模型配置类
     """
@@ -11,8 +11,9 @@ class Config():
         #   数据集设置相关配置
         self.project_dir = os.path.dirname(os.path.abspath(__file__))
         self.dataset_dir = os.path.join(self.project_dir, 'data')
-        self.train_corpus_file_paths = os.path.join(self.dataset_dir, 'ag_news_csv', 'train.csv')
-        self.test_corpus_file_paths = os.path.join(self.dataset_dir, 'ag_news_csv', 'test.csv')
+        # self.train_corpus_file_paths = os.path.join(self.dataset_dir, 'ag_news_csv', 'train.csv')
+        # self.test_corpus_file_paths = os.path.join(self.dataset_dir, 'ag_news_csv', 'test.csv')
+        self.train_corpus_file_paths = os.path.join(self.dataset_dir, 'stocks', 'ftnn_stock_trade_1m_800700.csv')
         self.min_freq = 1
         self.max_sen_len = None
 
@@ -24,7 +25,7 @@ class Config():
         self.num_decoder_layers = 6
         self.dim_feedforward = 512
         self.dim_classification = 256
-        self.num_class = 4
+        self.num_class = 2
         self.dropout = 0.1
         self.concat_type = 'avg'
         self.beta1 = 0.9

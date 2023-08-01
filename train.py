@@ -1,7 +1,9 @@
 import torch.nn as nn
 import torch
+
+from TimeSeriesClassificationModel import TimeSeriesClassificationModel
 from config import Config
-from data_helper import LoadSentenceClassificationDataset, my_tokenizer
+from data_helper import LoadSentenceClassificationDataset, my_tokenizer, LoadTimeSeriesClassificationDataset
 from ClassificationModel import ClassificationModel
 import os
 import time
@@ -23,22 +25,24 @@ class CustomSchedule(nn.Module):
 
 
 def train_model(config):
-    data_loader = LoadSentenceClassificationDataset(config.train_corpus_file_paths,
-                                                    my_tokenizer,
-                                                    batch_size=config.batch_size,
-                                                    min_freq=config.min_freq,
-                                                    max_sen_len=config.max_sen_len)
-    train_iter, test_iter = data_loader.load_train_val_test_data(
-        config.train_corpus_file_paths, config.test_corpus_file_paths)
+    # data_loader = LoadSentenceClassificationDataset(config.train_corpus_file_paths,
+    #                                                 my_tokenizer,
+    #                                                 batch_size=config.batch_size,
+    #                                                 min_freq=config.min_freq,
+    #                                                 max_sen_len=config.max_sen_len)
+    # train_iter, test_iter = data_loader.load_train_val_test_data(
+    #     config.train_corpus_file_paths, config.test_corpus_file_paths)
 
-    classification_model = ClassificationModel(vocab_size=len(data_loader.vocab),
-                                               d_model=config.d_model,
-                                               nhead=config.num_head,
-                                               num_encoder_layers=config.num_encoder_layers,
-                                               dim_feedforward=config.dim_feedforward,
-                                               dim_classification=config.dim_classification,
-                                               num_classification=config.num_class,
-                                               dropout=config.dropout)
+    data_loader = LoadTimeSeriesClassificationDataset(batch_size=config.batch_size)
+    train_iter, test_iter = data_loader.load_train_val_test_data(config.train_corpus_file_paths)
+
+    classification_model = TimeSeriesClassificationModel(d_model=config.d_model,
+                                                         nhead=config.num_head,
+                                                         num_encoder_layers=config.num_encoder_layers,
+                                                         dim_feedforward=config.dim_feedforward,
+                                                         dim_classification=config.dim_classification,
+                                                         num_classification=config.num_class,
+                                                         dropout=config.dropout)
 
     for p in classification_model.parameters():
         if p.dim() > 1:
